@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pengingat Sehat</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #e0f7fa;
+      text-align: center;
+      padding: 2em;
+    }
+    h1 {
+      color: #00796b;
+    }
+    button {
+      background-color: #00796b;
+      color: white;
+      border: none;
+      padding: 1em 2em;
+      font-size: 1em;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 1em;
+    }
+    button:hover {
+      background-color: #004d40;
+    }
+    .info {
+      margin-top: 2em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Pengingat Sehat</h1>
+  <p>Tekan tombol untuk mulai menerima pengingat minum dan istirahat.</p>
+  <button onclick="mulaiPengingat()">Mulai</button>
+
+  <div class="info" id="status"></div>
+
+  <script>
+    function kirimNotifikasi(pesan) {
+      if (Notification.permission === "granted") {
+        new Notification(pesan);
+      }
+    }
+
+    function mulaiPengingat() {
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission().then(function(permission) {
+          if (permission === "granted") {
+            mulaiPengingat();
+          } else {
+            alert("Notifikasi diblokir. Tidak bisa mengirim pengingat.");
+          }
+        });
+        return;
+      }
+
+      document.getElementById("status").innerText = "Pengingat aktif: minum air tiap 1 jam, istirahat tiap 2 jam.";
+
+      // Pengingat minum setiap 1 jam
+      setInterval(function() {
+        kirimNotifikasi("Waktunya minum air putih 💧");
+      }, 60 * 60 * 1000); // 1 jam
+
+      // Pengingat istirahat setiap 2 jam
+      setInterval(function() {
+        kirimNotifikasi("Saatnya istirahat sejenak 🧘‍♂️");
+      }, 2 * 60 * 60 * 1000); // 2 jam
+
+      kirimNotifikasi("Pengingat telah diaktifkan!");
+    }
+  </script>
+
+</body>
+</html>
